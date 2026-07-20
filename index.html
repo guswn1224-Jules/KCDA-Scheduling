@@ -88,7 +88,11 @@
         style="display:none; margin-top:20px;">
     Submit Availability
 </button>
-`
+
+<div id="summaryArea"
+     style="margin-top:40px;">
+</div>
+    `
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -367,7 +371,54 @@ console.log("Saved to Firestore");
 
 alert("Response Submitted!");
 
+loadSummary();
+
 }
+
+async function loadSummary() {
+
+    const snapshot =
+        await db.collection("responses")
+                .where("meetingId", "==", meetingId)
+                .get();
+
+    const summary = {};
+
+    snapshot.forEach(doc => {
+
+        const response = doc.data();
+
+        response.availability.forEach(item => {
+
+            if (!item.checked) return;
+
+            const key =
+                item.date + "_" + item.type;
+
+            summary[key] =
+                (summary[key] || 0) + 1;
+
+        });
+
+    });
+
+    let html = "<h2>Meeting Summary</h2>";
+
+    Object.keys(summary)
+          .sort()
+          .forEach(key => {
+
+        html += `
+            <p>${key} : ${summary[key]}</p>
+        `;
+
+    });
+
+    document.getElementById("summaryArea").innerHTML =
+        html;
+
+}
+
 </script>
 
 </body>

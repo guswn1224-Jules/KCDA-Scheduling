@@ -46,6 +46,8 @@
 <div class="card">
 
     <h1>KCDA Group Scheduler</h1>
+    
+    <div id="meetingCreator">
 
     <label>Meeting Title</label>
     <input type="text" placeholder="KIC Supplier Meeting">
@@ -60,6 +62,8 @@
     Create Meeting
 </button>   
 
+    </div>
+    
 <div id="result" style="margin-top:20px;"></div>
 <div id="meetingInfo"></div>
 <div id="participantForm" style="display:none; margin-top:30px;">
@@ -120,6 +124,13 @@ const db = firebase.firestore();
 
 const params = new URLSearchParams(window.location.search);
 const meetingId = params.get("meeting");
+
+if (meetingId) {
+
+    document.getElementById("meetingCreator").style.display =
+        "none";
+
+}
 
 let currentMeeting = null;
 

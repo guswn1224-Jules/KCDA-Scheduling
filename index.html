@@ -833,15 +833,7 @@ for(var h=8; h<=21; h++){
 
   // ---------------- Static text render ----------------
   function renderStaticText(){
-    document.title = (lang==='ko' ? '세션 연사 사전미팅 일정조율' : 'Session Speaker Pre-Meeting Scheduler') + ' | 2026 KoNECT-MOHW-MFDS';
-    document.documentElement.lang = lang;
-    var ls = document.getElementById('langSwitch');
-
-if(ls){
-  ls.innerHTML =
-    '<a href="'+buildng==='ko'?'active':'')+'">한국어</a>'+
-    '<a href="'+'+(lang==='en'?'active':'')+'">EN</a>';
-}
+    document.title = 'KCDA meeting scheduler'
     document.getElementById('hubHeading').textContent = t('hubHeading');
     document.getElementById('hubDesc').textContent = t('hubDesc');
     document.getElementById('titleKoInput').placeholder = t('titleKoPlaceholder');

@@ -312,21 +312,29 @@ async function submitAvailability() {
 
         });
 
-    await db.collection("responses").add({
+const responseId =
+    meetingId + "_" + company + "_" + name;
 
-        meetingId: meetingId,
+await db.collection("responses")
+        .doc(responseId)
+        .set({
 
-        participantName: name,
+            meetingId: meetingId,
 
-        company: company,
+            participantName: name,
 
-        availability: availability,
+            company: company,
 
-        submittedAt: new Date()
+            availability: availability,
 
-    });
+            submittedAt: new Date()
 
-    alert("Response Submitted!");
+        });
+
+alert(
+    "Response saved successfully.\n\n" +
+    "You may resubmit anytime to update your availability."
+);
 }
 
 async function submitAvailability() {
@@ -384,6 +392,9 @@ async function loadSummary() {
 
     const summary = {};
 
+    let bestKey = "";
+    let bestValue = 0;
+    
     snapshot.forEach(doc => {
 
         const response = doc.data();
@@ -398,11 +409,42 @@ async function loadSummary() {
             summary[key] =
                 (summary[key] || 0) + 1;
 
+            if (summary[key] > bestValue) {
+ 
+            bestValue = summary[key];
+            bestKey = key;
+
+}
+}
+
         });
 
     });
 
-    let html = "<h2>Meeting Summary</h2>";
+    let html = `
+
+<div style="
+    background:#eef6ff;
+    border:1px solid #90caf9;
+    border-radius:10px;
+    padding:20px;
+    margin-bottom:20px;
+">
+
+<h2>🏆 Best Option</h2>
+
+<p>${bestKey}</p>
+
+<p>
+Participants Available:
+<b>${bestValue}</b>
+</p>
+
+</div>
+
+<h2>Meeting Summary</h2>
+
+`;
 
     Object.keys(summary)
           .sort()

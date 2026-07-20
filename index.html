@@ -220,11 +220,13 @@ async function showAvailabilityForm() {
     const company =
         document.getElementById("companyName").value;
 
-    if (!name || !company) {
+if (!name || !company) {
 
-        alert("Please enter Name and Company");
+    alert("Please enter Name and Company");
 
-        return;
+    return;
+
+}
 
 const responseId =
     meetingId + "_" + company + "_" + name;

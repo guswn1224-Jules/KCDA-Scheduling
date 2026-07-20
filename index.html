@@ -836,9 +836,12 @@ for(var h=8; h<=21; h++){
     document.title = (lang==='ko' ? '세션 연사 사전미팅 일정조율' : 'Session Speaker Pre-Meeting Scheduler') + ' | 2026 KoNECT-MOHW-MFDS';
     document.documentElement.lang = lang;
     var ls = document.getElementById('langSwitch');
-    ls.innerHTML =
-      '<a href="'+buildUrl({lang:'ko'})+'" class="'+(lang==='ko'?'active':'')+'">한국어</a>'+
-      '<a href="'+buildUrl({lang:'en'})+'" class="'+(lang==='en'?'active':'')+'">EN</a>';
+
+if(ls){
+  ls.innerHTML =
+    '<a href="'+buildng==='ko'?'active':'')+'">한국어</a>'+
+    '<a href="'+'+(lang==='en'?'active':'')+'">EN</a>';
+}
     document.getElementById('hubHeading').textContent = t('hubHeading');
     document.getElementById('hubDesc').textContent = t('hubDesc');
     document.getElementById('titleKoInput').placeholder = t('titleKoPlaceholder');

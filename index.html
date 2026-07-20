@@ -56,9 +56,22 @@
     <label>End Date</label>
     <input type="date">
 
-    <button>Create Meeting</button>
+<button onclick="createMeeting()">
+    Create Meeting
+</button>   
 
 </div>
+<script>
 
+function createMeeting() {
+
+    const meetingId =
+        Math.random().toString(36).substring(2, 10);
+
+    alert("Meeting Created!\n\nID: " + meetingId);
+
+}
+
+</script>
 </body>
 </html>

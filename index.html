@@ -77,6 +77,11 @@
     </button>
 
 </div>
+
+<div id="responseStatus"
+     style="margin-top:10px; color:green;">
+</div>
+    
 </div>
 
 <div id="availabilityForm"
@@ -117,6 +122,8 @@ const params = new URLSearchParams(window.location.search);
 const meetingId = params.get("meeting");
 
 let currentMeeting = null;
+
+let existingAvailability = [];
     
 console.log("Meeting ID:", meetingId);
 
@@ -194,7 +201,7 @@ document.getElementById("participantForm").style.display = "block";
 
 }
 loadMeeting();
-function showAvailabilityForm() {
+async function showAvailabilityForm() {
 
     const name =
         document.getElementById("participantName").value;
@@ -208,6 +215,31 @@ function showAvailabilityForm() {
 
         return;
 
+const responseId =
+    meetingId + "_" + company + "_" + name;
+
+const existingResponse =
+    await db.collection("responses")
+            .doc(responseId)
+            .get();
+
+existingAvailability = [];
+
+if (existingResponse.exists) {
+
+    existingAvailability =
+        existingResponse.data().availability;
+
+    document.getElementById("responseStatus").innerHTML =
+        "✅ Existing response found. Previous availability loaded.";
+
+} else {
+
+    document.getElementById("responseStatus").innerHTML =
+        "";
+
+}
+        
     }
 
 document.getElementById("availabilityForm").style.display =
@@ -230,6 +262,13 @@ for (
     const dateString =
         d.toISOString().split("T")[0];
 
+const isChecked = (type) =>
+    existingAvailability.some(item =>
+        item.date === dateString &&
+        item.type === type &&
+        item.checked
+    );
+    
     html += `
 
     <div style="
@@ -242,9 +281,10 @@ for (
         <h4>${dateString}</h4>
 
         <label>
-            <input type="checkbox"
-                   data-date="${dateString}"
-                   data-type="am">
+<input type="checkbox"
+       data-date="${dateString}"
+       data-type="am"
+       ${isChecked("am") ? "checked" : ""}>
             AM
         </label>
 
@@ -253,7 +293,8 @@ for (
         <label>
             <input type="checkbox"
                    data-date="${dateString}"
-                   data-type="pm">
+                   data-type="pm"
+                   ${isChecked("pm") ? "checked" : ""}>
             PM
         </label>
 
@@ -262,7 +303,8 @@ for (
         <label>
             <input type="checkbox"
                    data-date="${dateString}"
-                   data-type="offline">
+                   data-type="offline"
+                   ${isChecked("offline") ? "checked" : ""}>
             Face-to-Face
         </label>
 
@@ -271,7 +313,8 @@ for (
         <label>
             <input type="checkbox"
                    data-date="${dateString}"
-                   data-type="online">
+                   data-type="online"
+                   ${isChecked("online") ? "checked" : ""}>
             Virtual
         </label>
 

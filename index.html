@@ -79,6 +79,10 @@
 </div>
 </div>
 
+<div id="availabilityForm"
+     style="display:none; margin-top:30px;">
+</div>
+    
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -102,6 +106,8 @@ const db = firebase.firestore();
 const params = new URLSearchParams(window.location.search);
 const meetingId = params.get("meeting");
 
+let currentMeeting = null;
+    
 console.log("Meeting ID:", meetingId);
 
 async function createMeeting() {
@@ -158,6 +164,8 @@ async function loadMeeting() {
 
     const meeting = doc.data();
 
+    currentMeeting = meeting;
+
     document.getElementById("meetingInfo").innerHTML = `
         <div>
             <h2>${meeting.title}</h2>
@@ -192,12 +200,78 @@ function showAvailabilityForm() {
 
     }
 
-    alert(
-        "Participant Registered\n\n" +
-        "Name: " + name + "\n" +
-        "Company: " + company
-    );
+document.getElementById("availabilityForm").style.display =
+    "block";
 
+let html = "<h3>Availability</h3>";
+
+const start =
+    new Date(currentMeeting.startDate);
+
+const end =
+    new Date(currentMeeting.endDate);
+
+for (
+    let d = new Date(start);
+    d <= end;
+    d.setDate(d.getDate() + 1)
+) {
+
+    const dateString =
+        d.toISOString().split("T")[0];
+
+    html += `
+
+    <div style="
+        border:1px solid #ddd;
+        padding:15px;
+        margin-bottom:15px;
+        border-radius:8px;
+    ">
+
+        <h4>${dateString}</h4>
+
+        <label>
+            <input type="checkbox"
+                   data-date="${dateString}"
+                   data-type="am">
+            AM
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   data-date="${dateString}"
+                   data-type="pm">
+            PM
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   data-date="${dateString}"
+                   data-type="offline">
+            Face-to-Face
+        </label>
+
+        <br>
+
+        <label>
+            <input type="checkbox"
+                   data-date="${dateString}"
+                   data-type="online">
+            Virtual
+        </label>
+
+    </div>
+
+    `;
+}
+
+document.getElementById("availabilityForm").innerHTML =
+    html;
 }
 </script>
 

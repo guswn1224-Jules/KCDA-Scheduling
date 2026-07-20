@@ -38,6 +38,71 @@
             border-radius: 8px;
             cursor: pointer;
         }
+
+.heatmap-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.heatmap-table th,
+.heatmap-table td {
+    border: 1px solid #d9d9d9;
+    text-align: center;
+    padding: 15px;
+}
+
+.heatmap-cell {
+    font-weight: bold;
+    color: white;
+}
+
+.low {
+    background: #c8e6c9;
+    color: #222;
+}
+
+.medium {
+    background: #81c784;
+}
+
+.high {
+    background: #ffb74d;
+}
+
+.very-high {
+    background: #ef5350;
+}
+
+.schedule-grid {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.schedule-grid th,
+.schedule-grid td {
+    border: 1px solid #d9d9d9;
+    text-align: center;
+    padding: 12px;
+}
+
+.slot-cell {
+    cursor: pointer;
+    background: white;
+    min-width: 70px;
+    height: 45px;
+}
+
+.slot-cell:hover {
+    background: #EEF2FF;
+}
+
+.slot-cell.selected {
+    background: #4F46E5;
+    color: white;
+}
+
     </style>
 </head>
 
@@ -220,128 +285,165 @@ async function showAvailabilityForm() {
     const company =
         document.getElementById("companyName").value;
 
-if (!name || !company) {
+    if (!name || !company) {
 
-    alert("Please enter Name and Company");
+        alert("Please enter Name and Company");
+        return;
 
-    return;
+    }
 
-}
+    const responseId =
+        meetingId + "_" + company + "_" + name;
 
-const responseId =
-    meetingId + "_" + company + "_" + name;
+    const existingResponse =
+        await db.collection("responses")
+                .doc(responseId)
+                .get();
 
-const existingResponse =
-    await db.collection("responses")
-            .doc(responseId)
-            .get();
+    existingAvailability = [];
 
-existingAvailability = [];
+    if (existingResponse.exists) {
 
-if (existingResponse.exists) {
+        existingAvailability =
+            existingResponse.data().availability || [];
 
-    existingAvailability =
-        existingResponse.data().availability;
+        document.getElementById("responseStatus").innerHTML =
+            "✅ Existing response found. Previous availability loaded.";
 
-    document.getElementById("responseStatus").innerHTML =
-        "✅ Existing response found. Previous availability loaded.";
+    } else {
 
-} else {
+        document.getElementById("responseStatus").innerHTML = "";
 
-    document.getElementById("responseStatus").innerHTML =
-        "";
+    }
 
-}
-        
-document.getElementById("availabilityForm").style.display =
-    "block";
+    document.getElementById("availabilityForm").style.display =
+        "block";
 
-let html = "<h3>Availability</h3>";
+    const start =
+        new Date(currentMeeting.startDate);
 
-const start =
-    new Date(currentMeeting.startDate);
+    const end =
+        new Date(currentMeeting.endDate);
 
-const end =
-    new Date(currentMeeting.endDate);
-
-for (
-    let d = new Date(start);
-    d <= end;
-    d.setDate(d.getDate() + 1)
-) {
-
-    const dateString =
-        d.toISOString().split("T")[0];
-
-const isChecked = (type) =>
-    existingAvailability.some(item =>
-        item.date === dateString &&
-        item.type === type &&
-        item.checked
-    );
-    
-    html += `
-
-    <div style="
-        border:1px solid #ddd;
-        padding:15px;
-        margin-bottom:15px;
-        border-radius:8px;
-    ">
-
-        <h4>${dateString}</h4>
-
-        <label>
-<input type="checkbox"
-       data-date="${dateString}"
-       data-type="am"
-       ${isChecked("am") ? "checked" : ""}>
-            AM
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox"
-                   data-date="${dateString}"
-                   data-type="pm"
-                   ${isChecked("pm") ? "checked" : ""}>
-            PM
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox"
-                   data-date="${dateString}"
-                   data-type="offline"
-                   ${isChecked("offline") ? "checked" : ""}>
-            Face-to-Face
-        </label>
-
-        <br>
-
-        <label>
-            <input type="checkbox"
-                   data-date="${dateString}"
-                   data-type="online"
-                   ${isChecked("online") ? "checked" : ""}>
-            Virtual
-        </label>
-
-    </div>
-
+    let html = `
+        <h3>Select Available Time</h3>
+        <table class="schedule-grid">
     `;
-}
 
-document.getElementById("availabilityForm").innerHTML =
-    html;
-    
-document.getElementById("submitAvailability").style.display =
-    "block";
-    
-}
+    html += "<tr>";
+    html += "<th></th>";
 
+    for (
+        let d = new Date(start);
+        d <= end;
+        d.setDate(d.getDate() + 1)
+    ) {
+
+        const dateString =
+            d.toISOString().split("T")[0];
+
+        html += `
+            <th colspan="3">
+                ${dateString}
+            </th>
+        `;
+    }
+
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th>Type</th>";
+
+    for (
+        let d = new Date(start);
+        d <= end;
+        d.setDate(d.getDate() + 1)
+    ) {
+
+        html += `
+            <th>AM</th>
+            <th>PM</th>
+            <th>Lunch</th>
+        `;
+    }
+
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<td><b>Face-to-Face</b></td>";
+
+    for (
+        let d = new Date(start);
+        d <= end;
+        d.setDate(d.getDate() + 1)
+    ) {
+
+        const dateString =
+            d.toISOString().split("T")[0];
+
+        ["am","pm","lunch"].forEach(period => {
+
+            html += `
+                <td
+                    class="slot-cell"
+                    data-date="${dateString}"
+                    data-period="${period}"
+                    data-mode="offline">
+                </td>
+            `;
+        });
+    }
+
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<td><b>Virtual</b></td>";
+
+    for (
+        let d = new Date(start);
+        d <= end;
+        d.setDate(d.getDate() + 1)
+    ) {
+
+        const dateString =
+            d.toISOString().split("T")[0];
+
+        ["am","pm","lunch"].forEach(period => {
+
+            html += `
+                <td
+                    class="slot-cell"
+                    data-date="${dateString}"
+                    data-period="${period}"
+                    data-mode="online">
+                </td>
+            `;
+        });
+    }
+
+    html += "</tr>";
+    html += "</table>";
+
+    document.getElementById("availabilityForm").innerHTML =
+        html;
+
+    document.getElementById("submitAvailability").style.display =
+        "block";
+
+    document
+        .querySelectorAll(".slot-cell")
+        .forEach(cell => {
+
+            cell.addEventListener("click", () => {
+
+                cell.classList.toggle("selected");
+
+            });
+
+        });
+
+}
+``
 async function submitAvailability() {
 
     const name =
@@ -352,8 +454,26 @@ async function submitAvailability() {
 
     const availability = [];
 
-    document
-        .querySelectorAll("#availabilityForm input[type='checkbox']")
+document
+.querySelectorAll(".slot-cell")
+.forEach(cell => {
+
+    availability.push({
+
+        date: cell.dataset.date,
+
+        period: cell.dataset.period,
+
+        mode: cell.dataset.mode,
+
+        checked:
+            cell.classList.contains(
+                "selected"
+            )
+
+    });
+
+});
         .forEach(cb => {
 
             availability.push({
@@ -391,47 +511,22 @@ alert(
 );
 }
 
-async function submitAvailability() {
-
-    const name =
-        document.getElementById("participantName").value;
-
-    const company =
-        document.getElementById("companyName").value;
-
-    const availability = [];
-
-    document
-        .querySelectorAll("#availabilityForm input[type='checkbox']")
-        .forEach(cb => {
-
-            availability.push({
-
-                date: cb.dataset.date,
-                type: cb.dataset.type,
-                checked: cb.checked
-
-            });
-
-        });
-
-await db.collection("responses").add({
-
-    meetingId: meetingId,
-
-    participantName: name,
-
-    company: company,
-
-    availability: availability,
-
-    submittedAt: new Date()
-
-});
-
 console.log("Saved to Firestore");
 
 alert("Response Submitted!");
+
+function getHeatClass(value) {
+
+    if (value === 0) return "";
+
+    if (value <= 2) return "low";
+
+    if (value <= 5) return "medium";
+
+    if (value <= 8) return "high";
+
+    return "very-high";
+}
 
 loadSummary();
 
@@ -441,76 +536,101 @@ async function loadSummary() {
 
     const snapshot =
         await db.collection("responses")
-                .where("meetingId", "==", meetingId)
+                .where("meetingId","==",meetingId)
                 .get();
 
     const summary = {};
 
-    let bestKey = "";
-    let bestValue = 0;
-    
     snapshot.forEach(doc => {
 
         const response = doc.data();
 
         response.availability.forEach(item => {
 
-            if (!item.checked) return;
+            if(!item.checked) return;
 
             const key =
                 item.date + "_" + item.type;
 
             summary[key] =
                 (summary[key] || 0) + 1;
-
-            if (summary[key] > bestValue) {
- 
-            bestValue = summary[key];
-            bestKey = key;
-
-}
-
         });
-
     });
 
-let html = `
+    const dates = [...new Set(
+        Object.keys(summary)
+              .map(k => k.split("_")[0])
+    )].sort();
 
-<div style="
-    background:#eef6ff;
-    border:1px solid #90caf9;
-    border-radius:10px;
-    padding:20px;
-    margin-bottom:20px;
-">
+    let html = `
+        <h2>Availability Heat Map</h2>
 
-<h2>🏆 Best Option</h2>
+        <table class="heatmap-table">
 
-<p>${bestKey}</p>
+        <tr>
+            <th rowspan="2">Type</th>
+    `;
 
-<p>
-Participants Available:
-<b>${bestValue}</b>
-</p>
-
-</div>
-
-<h2>Meeting Summary</h2>
-
-`;
-    Object.keys(summary)
-          .sort()
-          .forEach(key => {
+    dates.forEach(date => {
 
         html += `
-            <p>${key} : ${summary[key]}</p>
+            <th colspan="2">
+                ${date}
+            </th>
         `;
-
     });
+
+    html += "</tr><tr>";
+
+    dates.forEach(() => {
+
+        html += `
+            <th>F2F</th>
+            <th>Virtual</th>
+        `;
+    });
+
+    html += "</tr>";
+
+    const rows = [
+        { label:"AM", key:"am" },
+        { label:"PM", key:"pm" }
+    ];
+
+    rows.forEach(row => {
+
+        html += `<tr>`;
+
+        html += `<td>${row.label}</td>`;
+
+        dates.forEach(date => {
+
+            const offlineCount =
+                summary[date + "_offline"] || 0;
+
+            const onlineCount =
+                summary[date + "_online"] || 0;
+
+            html += `
+                <td class="heatmap-cell ${getHeatClass(offlineCount)}">
+                    ${offlineCount}
+                </td>
+            `;
+
+            html += `
+                <td class="heatmap-cell ${getHeatClass(onlineCount)}">
+                    ${onlineCount}
+                </td>
+            `;
+        });
+
+        html += "</tr>";
+    });
+
+    html += "</table>";
 
     document.getElementById("summaryArea").innerHTML =
         html;
-
 }
 
 </script>

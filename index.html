@@ -61,17 +61,30 @@
 </button>   
 
 </div>
+
+https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.jsscript>
+<script src="https://wwwfirebasejs/10.12.2/firebase-firestore-compat.jsscript>
+
 <script>
 
-function createMeeting() {
+const firebaseConfig = {
+   ...
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+
+async function createMeeting() {
 
     const meetingId =
-        Math.random().toString(36).substring(2, 10);
+        Math.random().toString(36).substring(2,10);
 
-    alert("Meeting Created!\n\nID: " + meetingId);
+    alert("Meeting Created!\nID : " + meetingId);
 
 }
 
 </script>
+
 </body>
 </html>

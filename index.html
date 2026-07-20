@@ -640,7 +640,7 @@
       tzBannerLocalOff:"🌐 감지된 시간대: <b>{tz}</b> — 현재 굵은 시간은 한국표준시(KST) 기준이며, 아래 작은 글씨가 현지 시간이에요. 현지 시간을 기준으로 크게 보고 싶으시면 오른쪽의 <b>'내 시간대로 보기'</b>를 켜주세요.",
     },
     en:{
-      heroTagHub:"Session Speaker Pre-Meeting Scheduler — Manage by Session",
+      heroTagHub:"KCDA meeting scheduler",
       hubHeading:"Create New Session",
       hubDesc:"Create a scheduling page for each session and share an individual link with each session's speakers.",
       titleKoPlaceholder:"Session name (Korean)",
@@ -733,7 +733,7 @@
       confirmReset2:"Please confirm once more. All submitted responses will be permanently deleted. Continue?",
       deleteSessionConfirm:"This will delete the session along with all its dates and responses. Continue?",
       sessionNotFound:"Session not found. Please check that the link is correct.",
-      hubLockedMsg:"This page can only be accessed via an individual session link.<br>If you don't have one, please contact the conference secretariat (kic@konect.or.kr).",
+      hubLockedMsg:"",
       footNote:"2026 KoNECT-MOHW-MFDS International Conference · Contact kic@konect.or.kr<br>All times on this page are in Korea Standard Time (KST, UTC+9) unless otherwise noted.",
       tzBannerLocalOn:"🌐 Detected time zone: <b>{tz}</b> — your local time is currently shown as the main time in the grid, with KST as reference below. Turn off <b>'View in my time zone'</b> on the right to switch back to KST as the main display.",
       tzBannerLocalOff:"🌐 Detected time zone: <b>{tz}</b> — the bold time in the grid is currently Korea Standard Time (KST), with your local time as reference below. Turn on <b>'View in my time zone'</b> on the right to make your local time the main display.",
@@ -1587,12 +1587,6 @@ for(var h=8; h<=21; h++){
       document.getElementById('heroTitle').textContent = t('heroTagHub');
       document.getElementById('heroTitleSub').textContent = '';
 
-      if(!isAdmin){
-        document.getElementById('hubLocked').innerHTML = '<div class="big">🔒</div>'+t('hubLockedMsg');
-        document.getElementById('hubLocked').style.display = '';
-        document.getElementById('hubAdminContent').style.display = 'none';
-        return;
-      }
       document.getElementById('hubLocked').style.display = 'none';
       document.getElementById('hubAdminContent').style.display = '';
       try{

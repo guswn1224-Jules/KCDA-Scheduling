@@ -349,21 +349,23 @@ async function submitAvailability() {
 
         });
 
-    await db.collection("responses").add({
+await db.collection("responses").add({
 
-        meetingId: meetingId,
+    meetingId: meetingId,
 
-        participantName: name,
+    participantName: name,
 
-        company: company,
+    company: company,
 
-        availability: availability,
+    availability: availability,
 
-        submittedAt: new Date()
+    submittedAt: new Date()
 
-    });
+});
 
-    alert("Response Submitted!");
+console.log("Saved to Firestore");
+
+alert("Response Submitted!");
 
 }
 </script>

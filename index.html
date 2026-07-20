@@ -61,6 +61,7 @@
 </button>   
 
 <div id="result" style="margin-top:20px;"></div>
+<div id="meetingInfo"></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -111,6 +112,40 @@ async function createMeeting() {
 
     });
 
+async function loadMeeting() {
+
+    if (!meetingId) return;
+
+    const doc =
+        await db.collection("meetings")
+                .doc(meetingId)
+                .get();
+
+    if (!doc.exists) {
+
+        document.getElementById("meetingInfo").innerHTML =
+            "<h3>Meeting not found</h3>";
+
+        return;
+    }
+
+    const meeting = doc.data();
+
+    document.getElementById("meetingInfo").innerHTML = `
+        <div>
+            <h2>${meeting.title}</h2>
+
+            <p>
+                Start Date: ${meeting.startDate}
+            </p>
+
+            <p>
+                End Date: ${meeting.endDate}
+            </p>
+        </div>
+    `;
+
+}
 const meetingUrl =
     window.location.origin +
     window.location.pathname +
@@ -128,7 +163,7 @@ document.getElementById("result").innerHTML = `
 `;
 
 }
-
+loadMeeting();
 </script>
 
 </body>

@@ -120,9 +120,9 @@ const meetingUrl =
 
 document.getElementById("result").innerHTML = `
     <h3>Meeting Created!</h3>
-    <p>
-        Share this link:
-    </p>
+
+    <p>Share this link:</p>
+
     ${meetingUrl}
         ${meetingUrl}
     </a>
@@ -131,7 +131,8 @@ document.getElementById("result").innerHTML = `
 }
 
 async function loadMeeting() {
-
+console.log(meetingId);
+    
     if (!meetingId) return;
 
     const doc =

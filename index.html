@@ -499,27 +499,6 @@ alert(
 );
 }
 
-console.log("Saved to Firestore");
-
-alert("Response Submitted!");
-
-function getHeatClass(value) {
-
-    if (value === 0) return "";
-
-    if (value <= 2) return "low";
-
-    if (value <= 5) return "medium";
-
-    if (value <= 8) return "high";
-
-    return "very-high";
-}
-
-loadSummary();
-
-}
-
 async function loadSummary() {
 
     const snapshot =

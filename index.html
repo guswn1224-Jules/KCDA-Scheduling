@@ -526,12 +526,13 @@
 
   // ---------------- Firebase init ----------------
   var firebaseConfig = {
-    apiKey: "AIzaSyBGmAblAw1G79nXigIN0eIAHK9uj8uV5Yw",
-    authDomain: "kic-pre-meeting.firebaseapp.com",
-    projectId: "kic-pre-meeting",
-    storageBucket: "kic-pre-meeting.firebasestorage.app",
-    messagingSenderId: "589671867680",
-    appId: "1:589671867680:web:72a34bfebed8bf2ac6a345"
+  apiKey: "AIzaSyA32txRzGKmk8iKE6G-Y6E0xgWg9lqcSQc",
+  authDomain: "kcda-meeting-scheduler.firebaseapp.com",
+  projectId: "kcda-meeting-scheduler",
+  storageBucket: "kcda-meeting-scheduler.firebasestorage.app",
+  messagingSenderId: "920897609777",
+  appId: "1:920897609777:web:499d8185dce0fb0b6b7510",
+  measurementId: "G-XKKS25L19N"
   };
   firebase.initializeApp(firebaseConfig);
   var db = firebase.firestore();
@@ -772,11 +773,11 @@
   // ---------------- Constants ----------------
   var RANGE_START = new Date(2026,6,15);
   var RANGE_END   = new Date(2026,8,15);
-  var HOURS = [
-  "AM",
-  "PM",
-  "LUNCH"
-];
+var HOURS = [];
+
+for(var h=8; h<=21; h++){
+   HOURS.push(h);
+}
 
   var WD_KO = ['일','월','화','수','목','금','토'];
   var WD_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];

@@ -2,9 +2,63 @@
 <html>
 <head>
     <title>KCDA Scheduling</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px;
+            background: #f5f7fb;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #253858;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>KCDA Scheduling</h1>
-    <p>Hello World</p>
+
+<div class="card">
+
+    <h1>KCDA Group Scheduler</h1>
+
+    <label>Meeting Title</label>
+    <input type="text" placeholder="KIC Supplier Meeting">
+
+    <label>Start Date</label>
+    <input type="date">
+
+    <label>End Date</label>
+    <input type="date">
+
+    <button>Create Meeting</button>
+
+</div>
+
 </body>
 </html>

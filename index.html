@@ -112,6 +112,24 @@ async function createMeeting() {
 
     });
 
+const meetingUrl =
+    window.location.origin +
+    window.location.pathname +
+    "?meeting=" +
+    meetingId;
+
+document.getElementById("result").innerHTML = `
+    <h3>Meeting Created!</h3>
+    <p>
+        Share this link:
+    </p>
+    ${meetingUrl}
+        ${meetingUrl}
+    </a>
+`;
+
+}
+
 async function loadMeeting() {
 
     if (!meetingId) return;
@@ -144,23 +162,6 @@ async function loadMeeting() {
             </p>
         </div>
     `;
-
-}
-const meetingUrl =
-    window.location.origin +
-    window.location.pathname +
-    "?meeting=" +
-    meetingId;
-
-document.getElementById("result").innerHTML = `
-    <h3>Meeting Created!</h3>
-    <p>
-        Share this link:
-    </p>
-    ${meetingUrl}
-        ${meetingUrl}
-    </a>
-`;
 
 }
 loadMeeting();

@@ -324,7 +324,48 @@ async function submitAvailability() {
 
     alert("Response Submitted!");
 }
-    
+
+async function submitAvailability() {
+
+    const name =
+        document.getElementById("participantName").value;
+
+    const company =
+        document.getElementById("companyName").value;
+
+    const availability = [];
+
+    document
+        .querySelectorAll("#availabilityForm input[type='checkbox']")
+        .forEach(cb => {
+
+            availability.push({
+
+                date: cb.dataset.date,
+                type: cb.dataset.type,
+                checked: cb.checked
+
+            });
+
+        });
+
+    await db.collection("responses").add({
+
+        meetingId: meetingId,
+
+        participantName: name,
+
+        company: company,
+
+        availability: availability,
+
+        submittedAt: new Date()
+
+    });
+
+    alert("Response Submitted!");
+
+}
 </script>
 
 </body>

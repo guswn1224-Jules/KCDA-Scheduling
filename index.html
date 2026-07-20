@@ -421,7 +421,7 @@ async function loadSummary() {
 
     });
 
-    let html = `
+let html = `
 
 <div style="
     background:#eef6ff;
@@ -445,7 +445,6 @@ Participants Available:
 <h2>Meeting Summary</h2>
 
 `;
-
     Object.keys(summary)
           .sort()
           .forEach(key => {

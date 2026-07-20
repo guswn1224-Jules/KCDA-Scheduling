@@ -68,16 +68,6 @@
     color:#C9C4E8;
   }
 
-  /* Lang switch */
-  .lang-switch{
-    display:flex;justify-content:flex-end;gap:2px;margin-top:18px;
-  }
-  .lang-switch a{
-    text-decoration:none;font-size:14.5px;font-weight:700;color:var(--muted);
-    padding:7px 14px;border-radius:999px;border:1px solid transparent;
-  }
-  .lang-switch a.active{color:var(--navy);background:#fff;border-color:var(--line);}
-
   /* Info strip */
   .info-strip{
     margin-top:14px;
@@ -377,7 +367,6 @@
 </div>
 
 <div class="wrap">
-  <div class="lang-switch" id="langSwitch"></div>
 
   <!-- HUB VIEW -->
   <div id="hubView">
@@ -1606,7 +1595,7 @@ function renderScheduleGrid(){
     btn.disabled = false;
   });
 
-  async function refreshHeatmap(){
+async function refreshHeatmap(){
     renderTzBanner(document.getElementById('tzBannerHeatmap'));
     var holder = document.getElementById('heatmapGridHolder');
     holder.innerHTML = '';
@@ -1630,8 +1619,6 @@ function renderScheduleGrid(){
     }
 
     var counts = {}; var namesBySlot = {};
-    var SLOTS = ["AM","PM","LUNCH"];
-    var MODES = ["Face-to-Face","Virtual"];
     responses.forEach(function(r){
       var label = r.affiliation ? (r.name+' ('+r.affiliation+')') : r.name;
       (r.slots||[]).forEach(function(k){
@@ -1644,74 +1631,30 @@ function renderScheduleGrid(){
     Object.keys(counts).forEach(function(k){ if(counts[k]>maxCount) maxCount=counts[k]; });
     document.getElementById('heatmapSummary').textContent = t('respondentsPrefix')+': '+responses.length;
 
-var html =
-  '<table class="schedule-grid">';
-
-html += '<tr>';
-html += '<th rowspan="2">Type</th>';
-
-activeDates.forEach(function(iso){
-
-  var d = parseISO(iso);
-
-  html +=
-    '<th colspan="3">'
-    +(d.getMonth()+1)
-    +'/'
-    +d.getDate()
-    +'</th>';
-
-});
-
-html += '</tr>';
-
-html += '<tr>';
-
-activeDates.forEach(function(){
-
-  html += '<th>AM</th>';
-  html += '<th>PM</th>';
-  html += '<th>Lunch</th>';
-
-});
-
-html += '</tr>';
-
-MODES.forEach(function(mode){
-
-  html += '<tr>';
-
-  html += '<td><b>'+mode+'</b></td>';
-
-  activeDates.forEach(function(iso){
-
-    SLOTS.forEach(function(slot){
-
-      var k =
-        iso+"_"+slot+"_"+mode;
-
-      var c =
-        counts[k] || 0;
-
-      var bg =
-        heatColor(c,maxCount);
-
-      html +=
-        '<td style="background:'+bg+'">'+
-        c+
-        '</td>';
-
+    var hourColW = showLocal ? 'minmax(84px,120px)' : 'minmax(60px,84px)';
+    var dateColW = showLocal ? 'minmax(78px,1fr)' : 'minmax(50px,1fr)';
+    var cols = hourColW + ' ' + activeDates.map(function(){return dateColW;}).join(' ');
+    var html = '<div class="grid-scroll"><div class="grid" style="grid-template-columns:'+cols+';">';
+    html += '<div class="g-corner"></div>';
+    activeDates.forEach(function(iso){
+      var d = parseISO(iso);
+      html += '<div class="g-datehead">'+(d.getMonth()+1)+'/'+d.getDate()+'<div class="wd">'+WD[d.getDay()]+'</div>'+(showLocal?'<div class="wd-local">'+localDateForColumn(iso)+'</div>':'')+'</div>';
     });
+    HOURS.forEach(function(hh){
+      var hl = hourLabels(hh, activeDates[0]);
+      html += '<div class="g-hour">'+hl.primary+(hl.secondary?'<div class="local">'+hl.secondary+'</div>':'')+'</div>';
+      activeDates.forEach(function(iso){
+        var k = keyOf(iso,hh);
+        var c = counts[k]||0;
+        var bg = heatColor(c, maxCount);
+        var names = (namesBySlot[k]||[]).join(', ');
+        var title = c>0 ? t('peopleAvailable',{n:c})+': '+names : t('noAvailable');
+        html += '<div class="g-cell heat" style="background:'+bg+';" title="'+escapeHtml(title)+'" data-key="'+k+'"></div>';
+      });
+    });
+    html += '</div></div>';
+    holder.innerHTML = html;
 
-  });
-
-  html += '</tr>';
-
-});
-
-html += '</table>';
-
-holder.innerHTML = html;
     var infoBox = document.getElementById('heatmapInfoBox');
     infoBox.style.display = 'none';
     holder.querySelectorAll('.g-cell.heat').forEach(function(cell){
@@ -1719,14 +1662,7 @@ holder.innerHTML = html;
         var k = cell.dataset.key;
         var parts = k.split('_');
         var d = parseISO(parts[0]);
-        var label =
-(d.getMonth()+1)+
-'/'+
-d.getDate()+
-' '+
-parts[1]+
-' '+
-parts[2];
+        var label = (d.getMonth()+1)+'/'+d.getDate()+' ('+WD[d.getDay()]+') '+parts[1]+':00\u2013'+pad((+parts[1])+1)+':00';
         var c = counts[k]||0;
         var names = (namesBySlot[k]||[]).join(', ');
         var body = c>0 ? ('<b>'+label+'</b> \u2014 '+t('peopleAvailable',{n:c})+': '+escapeHtml(names)) : ('<b>'+label+'</b> \u2014 '+t('noAvailable'));
@@ -1747,29 +1683,15 @@ parts[2];
       sorted.forEach(function(k, idx){
         var parts = k.split('_');
         var d = parseISO(parts[0]);
-        var label =
-  (d.getMonth()+1) +
-  '/' +
-  d.getDate() +
-  ' ' +
-  parts[1] +
-  ' ' +
-  parts[2];
+        var label = (d.getMonth()+1)+'/'+d.getDate()+' ('+WD[d.getDay()]+') '+parts[1]+':00-'+pad((+parts[1])+1)+':00';
+        topHtml += '<div class="top-slot-row"><span class="rank">'+(idx+1)+'</span>'+label+'<span class="count">'+t('peopleAvailable',{n:counts[k]})+'</span></div>';
+      });
     }
     document.getElementById('topSlots').innerHTML = topHtml;
     document.getElementById('respondentList').innerHTML = responses.map(function(r){
       var label = r.affiliation ? (r.name+' ('+r.affiliation+')') : r.name;
       return '<span class="name-chip">'+escapeHtml(label)+' &middot; '+(r.slots?r.slots.length:0)+'</span>';
     }).join('');
-  }
-
-  function heatColor(count, max){
-    if(count===0 || max===0) return '#ffffff';
-    var t2 = count/max;
-    var c1=[255,255,255], c2=[155,171,215], c3=[46,28,95], r,g,b;
-    if(t2<0.5){ var tt=t2/0.5; r=c1[0]+(c2[0]-c1[0])*tt; g=c1[1]+(c2[1]-c1[1])*tt; b=c1[2]+(c2[2]-c1[2])*tt; }
-    else{ var tt2=(t2-0.5)/0.5; r=c2[0]+(c3[0]-c2[0])*tt2; g=c2[1]+(c3[1]-c2[1])*tt2; b=c2[2]+(c3[2]-c2[2])*tt2; }
-    return 'rgb('+Math.round(r)+','+Math.round(g)+','+Math.round(b)+')';
   }
 
   function renderHeroForSession(){

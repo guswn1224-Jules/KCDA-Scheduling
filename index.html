@@ -504,8 +504,7 @@
     </div>
   </div>
 
-  <div class="foot" id="footNote"></div>
-</div>
+  <div class="foot" id="footNote" style="display:none;"></div>
 
 <div class="modal-overlay" id="nameModal">
   <div class="modal-box">
@@ -756,7 +755,7 @@
   };
 
   var qs = new URLSearchParams(location.search);
-  var lang = 'en';
+  var lang = 'KO';
   var sessionId = qs.get('session') || '';
   var isAdmin = qs.get('admin') === '1';
 
@@ -895,7 +894,7 @@ for(var h=8; h<=21; h++){
     document.getElementById('exportDesc').textContent = t('exportDesc');
     document.getElementById('exportSessionBtn').textContent = t('exportSessionBtn');
     document.getElementById('sessionNotFound').innerHTML = '<div class="big">🔍</div>'+t('sessionNotFound');
-    document.getElementById('footNote').innerHTML = t('footNote') + '<br><span style="opacity:0.5;font-size:11px;">Build '+BUILD_ID+'</span>';
+    document.getElementById('footNote').style.display = 'none';
   }
 
   // ---------------- Tabs ----------------

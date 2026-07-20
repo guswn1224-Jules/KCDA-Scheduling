@@ -62,6 +62,21 @@
 
 <div id="result" style="margin-top:20px;"></div>
 <div id="meetingInfo"></div>
+<div id="participantForm" style="display:none; margin-top:30px;">
+
+    <h3>Your Information</h3>
+
+    <label>Name</label>
+    <input type="text" id="participantName">
+
+    <label>Company</label>
+    <input type="text" id="companyName">
+
+    <button onclick="showAvailabilityForm()">
+        Continue
+    </button>
+
+</div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -157,8 +172,33 @@ async function loadMeeting() {
         </div>
     `;
 
+document.getElementById("participantForm").style.display = "block";
+
 }
 loadMeeting();
+function showAvailabilityForm() {
+
+    const name =
+        document.getElementById("participantName").value;
+
+    const company =
+        document.getElementById("companyName").value;
+
+    if (!name || !company) {
+
+        alert("Please enter Name and Company");
+
+        return;
+
+    }
+
+    alert(
+        "Participant Registered\n\n" +
+        "Name: " + name + "\n" +
+        "Company: " + company
+    );
+
+}
 </script>
 
 </body>

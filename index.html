@@ -80,7 +80,27 @@ async function createMeeting() {
     const meetingId =
         Math.random().toString(36).substring(2,10);
 
-    alert("Meeting Created!\nID : " + meetingId);
+    const title =
+        document.querySelector("input[type='text']").value;
+
+    const dates =
+        document.querySelectorAll("input[type='date']");
+
+    const startDate = dates[0].value;
+    const endDate = dates[1].value;
+
+    await db.collection("meetings").doc(meetingId).set({
+
+        title: title,
+        startDate: startDate,
+        endDate: endDate,
+        createdAt: new Date()
+
+    });
+
+    alert(
+        "Meeting Saved!\n\nID: " + meetingId
+    );
 
 }
 

@@ -131,7 +131,8 @@ document.getElementById("result").innerHTML = `
 }
 
 async function loadMeeting() {
-console.log(meetingId);
+
+    console.log("meetingId=", meetingId);
     
     if (!meetingId) return;
 
@@ -142,8 +143,9 @@ console.log(meetingId);
 
     if (!doc.exists) {
 
-        document.getElementById("meetingInfo").innerHTML =
-            "<h3>Meeting not found</h3>";
+document.getElementById("result").innerHTML =
+    "<h3>Meeting Created!</h3>" +
+    "<p>" + meetingUrl + "</p>";
 
         return;
     }

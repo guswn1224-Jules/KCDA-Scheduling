@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Session Chair Pre-Meeting Scheduler | 2026 KoNECT-MOHW-MFDS</title>
+<title>Meeting Scheduler</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -375,8 +375,11 @@
         <p class="desc" id="hubDesc"></p>
         <div id="createForm">
           <div class="form-row">
-            <input type="text" id="titleKoInput" placeholder="미팅 이름 (한국어)">
-            <input type="text" id="titleEnInput" placeholder="Session name (English)">
+            <div class="form-row">
+    <input type="text"
+           id="titleKoInput"
+           placeholder="미팅 이름">
+</div>
           </div>
           <button class="btn btn-primary" id="createSessionBtn"></button>
         </div>
@@ -476,7 +479,6 @@
           <h3 id="renameHeading"></h3>
           <div class="form-row">
             <input type="text" id="renameKoInput" placeholder="미팅 이름 (한국어)">
-            <input type="text" id="renameEnInput" placeholder="Session name (English)">
           </div>
           <button class="btn btn-secondary btn-sm" id="renameSaveBtn"></button>
         </div>
@@ -905,7 +907,6 @@ for(var h=8; h<=21; h++){
     document.getElementById('copyAdminLinkBtn').textContent = t('copyBtn');
     document.getElementById('renameHeading').textContent = t('renameHeading');
     document.getElementById('renameKoInput').placeholder = t('titleKoPlaceholder');
-    document.getElementById('renameEnInput').placeholder = t('titleEnPlaceholder');
     document.getElementById('renameSaveBtn').textContent = t('renameSaveBtn');
     document.getElementById('adminDateHeading').textContent = t('adminDateHeading');
     document.getElementById('adminDateDesc').textContent = t('adminDateDesc');
@@ -1186,14 +1187,13 @@ for(var h=8; h<=21; h++){
 
   document.getElementById('createSessionBtn').addEventListener('click', async function(){
     var ko = document.getElementById('titleKoInput').value.trim();
-    var en = document.getElementById('titleEnInput').value.trim();
     if(!ko && !en){ showToast(t('toastNeedTitle')); return; }
     var btn = this; btn.disabled = true;
     try{
       var id = await createSessionDoc(ko, en);
       sessionsIndex.push({id:id, titleKo:ko, titleEn:en, createdAt:new Date().toISOString()});
       document.getElementById('titleKoInput').value='';
-      document.getElementById('titleEnInput').value='';
+      //document.getElementById('titleEnInput').value='';
       showToast(t('toastSessionCreated'));
       document.getElementById('createResult').innerHTML =
         '<div style="font-size:11.5px;font-weight:700;color:var(--navy-soft);margin-top:10px;">'+t('participantLinkLabel')+'</div>'+
@@ -1325,7 +1325,6 @@ function keyOf(dateISO, slot){
 
   document.getElementById('renameSaveBtn').addEventListener('click', async function(){
     var ko = document.getElementById('renameKoInput').value.trim();
-    var en = document.getElementById('renameEnInput').value.trim();
     if(!ko && !en){ showToast(t('toastNeedTitle')); return; }
     var btn = this; btn.disabled = true;
     try{
@@ -1758,8 +1757,7 @@ async function refreshHeatmap(){
     document.getElementById('sessionLinkInput').value = fullLink(sessionId);
     document.getElementById('adminLinkInput').value = fullLinkAdmin(sessionId);
     document.getElementById('renameKoInput').value = currentSessionMeta.titleKo || '';
-    document.getElementById('renameEnInput').value = currentSessionMeta.titleEn || '';
-
+    
     if(!isAdmin){
       document.getElementById('tabAdminBtn').style.display = 'none';
     }

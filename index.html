@@ -1374,6 +1374,7 @@ function renderScheduleGrid(){
       '<table class="schedule-grid">';
 
   html += '<tr>';
+  html += '<th></th>';
  // html += '<th rowspan="2">Type</th>';
 
   activeDates.forEach(function(iso){
@@ -1391,12 +1392,10 @@ function renderScheduleGrid(){
 
   html += '</tr>';
 
-  html += '<tr>';
-
 SLOTS.forEach(function(slot){
 
     html += '<tr>';
-
+   
     html += '<td><b>'+slot+'</b></td>';
 
     activeDates.forEach(function(iso){

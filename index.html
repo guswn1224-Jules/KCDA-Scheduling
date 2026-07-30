@@ -753,7 +753,9 @@
     }
   };
 
-  var lang = 'KO';
+  var qs = new URLSearchParams(location.search);
+  
+  var lang = 'ko';
   var sessionId = qs.get('session') || '';
   var isAdmin = qs.get('admin') === '1';
 

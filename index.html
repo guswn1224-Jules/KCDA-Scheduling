@@ -802,6 +802,28 @@ for(var h=8; h<=21; h++){
   function pad(n){ return n<10 ? '0'+n : ''+n; }
   function toISO(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
   function parseISO(s){ var p=s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function heatColor(count, maxCount){
+
+    if(count === 0){
+        return "#FFFFFF";
+    }
+
+    if(maxCount === 0){
+        return "#FFFFFF";
+    }
+
+    var ratio = count / maxCount;
+
+    if(ratio < 0.34){
+        return "#C7CFEA";
+    }
+
+    if(ratio < 0.67){
+        return "#5A6FB0";
+    }
+
+    return "#2E1C5F";
+}
   function allRangeDates(){
     var arr=[]; var d=new Date(RANGE_START);
     while(d<=RANGE_END){ arr.push(toISO(d)); d.setDate(d.getDate()+1); }

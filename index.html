@@ -399,7 +399,6 @@
     <div class="info-strip">
       <div class="info-pill"><span class="dot"></span><span id="infoOnline"></span></div>
       <div class="info-pill"><span class="dot"></span><span id="infoDrag"></span></div>
-      <div class="info-pill"><span class="dot"></span><span id="infoContactLabel"></span>&nbsp;<b><a href="mailto:kic@konect.or.kr" style="color:var(--navy-soft);text-decoration:none;">kic@konect.or.kr</a></b></div>
     </div>
 
     <div class="tabs">
@@ -754,7 +753,6 @@
     }
   };
 
-  var qs = new URLSearchParams(location.search);
   var lang = 'KO';
   var sessionId = qs.get('session') || '';
   var isAdmin = qs.get('admin') === '1';
@@ -785,8 +783,8 @@
   }
 
   // ---------------- Constants ----------------
-  var RANGE_START = new Date(2026,6,15);
-  var RANGE_END   = new Date(2026,8,15);
+  var RANGE_START = new Date();
+  var RANGE_END   = new Date();
 var HOURS = [];
 
 for(var h=8; h<=21; h++){

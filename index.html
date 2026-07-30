@@ -1186,7 +1186,8 @@ for(var h=8; h<=21; h++){
 
   document.getElementById('createSessionBtn').addEventListener('click', async function(){
     var ko = document.getElementById('titleKoInput').value.trim();
-    if(!ko && !en){ showToast(t('toastNeedTitle')); return; }
+    var en = '';
+    if(!ko){ showToast(t('toastNeedTitle')); return; }
     var btn = this; btn.disabled = true;
     try{
       var id = await createSessionDoc(ko, en);
@@ -1324,7 +1325,7 @@ function keyOf(dateISO, slot){
 
   document.getElementById('renameSaveBtn').addEventListener('click', async function(){
     var ko = document.getElementById('renameKoInput').value.trim();
-    if(!ko && !en){ showToast(t('toastNeedTitle')); return; }
+    if(!ko){ showToast(t('toastNeedTitle')); return; }
     var btn = this; btn.disabled = true;
     try{
       await renameSessionDoc(sessionId, ko, en);
